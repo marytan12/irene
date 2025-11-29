@@ -206,8 +206,10 @@
         <!-- HEADER -->
         <header class="text-center mb-16 fade-in-up delay-100">
             <div class="inline-block mb-4">
-                <img src="icon.png" alt="Icono"
-                    class="w-16 h-16 object-contain animate-[pulse_4s_ease-in-out_infinite] opacity-90 mx-auto">
+                <img src="https://cdn-icons-png.flaticon.com/512/3971/3971380.png" alt="Corazón"
+                    class="w-16 h-16 object-contain animate-[pulse_4s_ease-in-out_infinite] opacity-90 mx-auto"
+                    onerror="this.style.display='none'">
+                <!-- Nota: He puesto una URL de ejemplo para el icono, asegúrate de que funcione o usa tu propia imagen 'icon.png' si la tienes localmente -->
             </div>
             <h1 class="font-script text-7xl md:text-8xl text-rose-800 mb-4 leading-tight">Feliz<br>Aniversario</h1>
             <div class="flex items-center justify-center gap-4 text-gray-400 font-serif italic text-lg mt-6">
@@ -222,17 +224,23 @@
             <div class="bg-white p-10 md:p-14 shadow-xl rounded-sm relative transform rotate-1 border border-gray-50">
                 <div class="tape absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 rotate-[-2deg]"></div>
                 <div class="prose prose-lg prose-rose mx-auto font-serif text-gray-600 leading-loose">
-                    <p
-                        class="first-letter:text-5xl first-letter:font-script first-letter:text-rose-600 first-letter:float-left first-letter:mr-3">
-                        Mi querida Irene,
+                    <p class="first-letter:text-5xl first-letter:font-script first-letter:text-rose-600 first-letter:float-left first-letter:mr-3">
+                        Holi amorcito,
                     </p>
                     <p>
-                        Parece mentira que ya haya pasado un año. Un año en el que cada día ha sido una nueva aventura,
-                        una nueva risa compartida y un nuevo motivo para quererte más.
+                        ¿Qué tal? Bueno, ya sabes que te amo mucho, demasiado, que eres muy importante para mí, y que cada día me enamoras más. Me alegro muchísimo de que llevemos un año, y espero que sea el primero de 30000 más. Me encantaría estar toda mi vida contigo y dedicártela a ti, la vida también. Eres la única persona que me ha querido tanto y que yo he sentido que me quiere, y que yo quiero tanto.
                     </p>
                     <p>
-                        He querido preparar este pequeño rincón digital para guardar algunos de nuestros momentos
-                        favoritos. No son solo fotos, son instantes que me hacen inmensamente feliz.
+                        Me alegra mucho el tener a alguien que haga lo que haga y aunque a veces lo haga mal siempre esté orgullosa de mí, siempre me das ganas de continuar cuando todo lo demás se pone en mi contra. Sé que dentro de este año ha habido momentos muy difíciles, pero lo importante es que hemos sabido superarlo como nadie lo ha hecho nunca y que seguimos aquí. De hecho, después de discutir yo te quiero más porque me doy cuenta de lo que me queda si te pierdo, y me doy cuenta.
+                    </p>
+                    <p>
+                        Que por cierto, lo que me queda si te vas es literalmente nada, una cosa vacía, y después de que llegases tú me he dado cuenta lo importante que eres. En esta carta no me quiero fijar en el futuro, creo que es mejor demostrar a nuestros yos del futuro que fuimos capaces de pasar por todo juntos. Pero ahora mismo de lo que más me alegro es de que estés leyendo esto porque significa que estás aquí.
+                    </p>
+                    <p>
+                         Espero que te gusten las flores que te voy a dar (ahora es el momento en el que me miras y dices ¿Qué flores? Y voy yo a por ellas).
+                    </p>
+                    <p>
+                        Bueno, tampoco tengo mucho más que decir que no haya hecho ya. Que sepas que te quiero mucho. Que vales mucho. Y que eres muy importante para mí. Gracias por este año.
                     </p>
                 </div>
             </div>
@@ -253,7 +261,8 @@
 
                     <!-- Contenedor de Imagen -->
                     <div class="photo-container mb-4">
-                        <img id="carousel-img" src="" alt="Recuerdo" class="transition-opacity duration-300">
+                        <!-- Placeholder de imagen por defecto por si no cargan las locales -->
+                        <img id="carousel-img" src="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?q=80&w=1000&auto=format&fit=crop" alt="Recuerdo" class="transition-opacity duration-300">
                     </div>
 
                     <!-- Pie de foto (Contador) -->
@@ -298,6 +307,7 @@
     <script>
         // --- LÓGICA DEL CARRUSEL ---
         // Lista de imágenes basada en los archivos del usuario
+        // NOTA: Asegúrate de que estas imágenes '1.jpeg', '2.jpeg', etc., estén en la misma carpeta que este archivo HTML.
         const photos = [
             '1.jpeg', '2.jpeg', '3.jpg', '4.jpg', '5.jpg',
             '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
@@ -318,6 +328,12 @@
         const frameElement = document.getElementById('polaroid-frame');
 
         // Inicializar primera foto
+        // Se añade un fallback por si la imagen local falla (para que veas algo en la preview)
+        imgElement.onerror = function() {
+            this.src = 'https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?auto=format&fit=crop&w=600&q=80'; // Imagen genérica de fallback
+            this.onerror = null; // Prevenir bucle infinito
+        };
+
         updateCarousel(false);
 
         function updateCarousel(animate = true) {
@@ -365,7 +381,7 @@
             updateCarousel(true);
         }
 
-        // --- LÓGICA DEL SOBRE (Misma que antes) ---
+        // --- LÓGICA DEL SOBRE ---
         const sealBtn = document.getElementById('seal-btn');
         const envelopeLayer = document.getElementById('envelope-layer');
         const mainContent = document.getElementById('main-content');
@@ -387,6 +403,7 @@
             }, 500);
         }
 
+        // Eventos Touch
         sealBtn.addEventListener('touchstart', (e) => {
             isDragging = true;
             startY = e.touches[0].clientY;
@@ -395,7 +412,7 @@
 
         document.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            e.preventDefault();
+            e.preventDefault(); // Importante para evitar scroll mientras se arrastra
             currentY = e.touches[0].clientY;
             let deltaY = currentY - startY;
             if (deltaY < 0) {
@@ -419,6 +436,7 @@
             }
         });
 
+        // Eventos Mouse (para PC)
         sealBtn.addEventListener('mousedown', (e) => {
             isDragging = true;
             startY = e.clientY;
