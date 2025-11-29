@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Irene - 1er Aniversario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- CONFIGURACIÓN BASE & TIPOGRAFÍA --- */
+        :root {
+            --paper-color: #fdfbf7;
+            --ink-color: #4a4a4a;
+            --accent-color: #be123c;
+            /* Rose 700 */
+        }
+
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: var(--paper-color);
+            color: var(--ink-color);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-script {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* Textura de papel granulado (Noise) */
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- ESTILOS DEL SOBRE (INTRO) --- */
+        #envelope-layer {
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            z-index: 100;
+        }
+
+        .envelope-body {
+            background: linear-gradient(135deg, #f3dcdc 0%, #eecaca 100%);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .envelope-flap {
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            background: #e5b8b8;
+            transform-origin: top;
+            z-index: 30;
+        }
+
+        .heart-seal {
+            animation: pulse-slow 3s infinite ease-in-out;
+            cursor: grab;
+            box-shadow: 0 4px 15px rgba(190, 18, 60, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .heart-seal:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        /* --- ANIMACIONES GENERALES --- */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-300 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-500 {
+            transition-delay: 0.5s;
+        }
+
+        @keyframes pulse-slow {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* --- CARRUSEL POLAROID --- */
+        .carousel-container {
+            perspective: 1000px;
+        }
+
+        .polaroid-frame {
+            background: #fff;
+            padding: 15px 15px 60px 15px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+            transform-origin: center top;
+            position: relative;
+        }
+
+        /* Efecto de "swap" para las fotos */
+        .polaroid-frame.swapping {
+            transform: rotate(5deg) translateX(50px);
+            opacity: 0;
+        }
+
+        .polaroid-frame.swapping-in {
+            transform: rotate(-5deg) translateX(-50px);
+            opacity: 0;
+        }
+
+        .photo-container {
+            background-color: #f0f0f0;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.05) brightness(1.02);
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.1);
+            background-color: rgba(190, 18, 60, 0.1);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Cinta adhesiva */
+        .tape {
+            background-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen relative selection:bg-rose-200 selection:text-rose-900">
+
+    <!-- Textura de ruido (Overlay) -->
+    <div class="bg-noise"></div>
+
+    <!-- --- CAPA 1: EL SOBRE (INTRODUCCIÓN) --- -->
+    <div id="envelope-layer"
+        class="fixed inset-0 w-full h-full flex items-end justify-center bg-[#fdfbf7] z-50 overflow-hidden">
+        <div class="absolute top-1/4 w-full text-center opacity-60 px-6">
+            <p class="font-script text-3xl text-rose-800 animate-bounce">Desliza para abrir</p>
+        </div>
+        <div class="relative w-full max-w-lg h-[85vh] flex flex-col items-center justify-end">
+            <div class="envelope-body w-full h-full rounded-t-[3rem] relative flex items-center justify-center">
+                <div class="absolute top-0 w-full h-64 envelope-flap shadow-lg rounded-b-[50%]"></div>
+                <div id="seal-btn"
+                    class="absolute top-48 z-40 bg-rose-700 text-white rounded-full w-24 h-24 flex items-center justify-center shadow-2xl border-[3px] border-rose-100 heart-seal touch-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+                <div class="absolute bottom-32 w-full text-center px-4 z-10">
+                    <h1 class="text-rose-900/30 text-7xl font-script select-none">Para Irene</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --- CAPA 2: CONTENIDO PRINCIPAL --- -->
+    <main id="main-content"
+        class="relative w-full max-w-2xl mx-auto px-6 py-20 hidden opacity-0 transition-opacity duration-1000">
+
+        <!-- HEADER -->
+        <header class="text-center mb-16 fade-in-up delay-100">
+            <div class="inline-block mb-4">
+                <img src="icon.png" alt="Icono"
+                    class="w-16 h-16 object-contain animate-[pulse_4s_ease-in-out_infinite] opacity-90 mx-auto">
+            </div>
+            <h1 class="font-script text-7xl md:text-8xl text-rose-800 mb-4 leading-tight">Feliz<br>Aniversario</h1>
+            <div class="flex items-center justify-center gap-4 text-gray-400 font-serif italic text-lg mt-6">
+                <span class="h-[1px] w-12 bg-rose-200"></span>
+                <span>28 de Noviembre</span>
+                <span class="h-[1px] w-12 bg-rose-200"></span>
+            </div>
+        </header>
+
+        <!-- CARTA -->
+        <section class="mb-24 fade-in-up delay-300 relative">
+            <div class="bg-white p-10 md:p-14 shadow-xl rounded-sm relative transform rotate-1 border border-gray-50">
+                <div class="tape absolute -top-3 left-1/2 -translate-x-1/2 w-32 h-8 rotate-[-2deg]"></div>
+                <div class="prose prose-lg prose-rose mx-auto font-serif text-gray-600 leading-loose">
+                    <p
+                        class="first-letter:text-5xl first-letter:font-script first-letter:text-rose-600 first-letter:float-left first-letter:mr-3">
+                        Mi querida Irene,
+                    </p>
+                    <p>
+                        Parece mentira que ya haya pasado un año. Un año en el que cada día ha sido una nueva aventura,
+                        una nueva risa compartida y un nuevo motivo para quererte más.
+                    </p>
+                    <p>
+                        He querido preparar este pequeño rincón digital para guardar algunos de nuestros momentos
+                        favoritos. No son solo fotos, son instantes que me hacen inmensamente feliz.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CARRUSEL DE FOTOS -->
+        <section class="pb-20 fade-in-up delay-500">
+            <div class="text-center mb-8">
+                <h2 class="font-script text-4xl text-rose-800">Nuestros Momentos</h2>
+            </div>
+
+            <div class="carousel-container relative max-w-sm mx-auto">
+
+                <!-- Marco Polaroid Dinámico -->
+                <div id="polaroid-frame" class="polaroid-frame transform rotate-[-2deg]">
+                    <!-- Cinta decorativa -->
+                    <div class="tape absolute -top-4 left-1/2 -translate-x-1/2 w-24 h-6 rotate-2 z-10"></div>
+
+                    <!-- Contenedor de Imagen -->
+                    <div class="photo-container mb-4">
+                        <img id="carousel-img" src="" alt="Recuerdo" class="transition-opacity duration-300">
+                    </div>
+
+                    <!-- Pie de foto (Contador) -->
+                    <div class="flex justify-between items-end px-2">
+                        <div class="font-script text-2xl text-gray-600" id="photo-caption">Recuerdo especial</div>
+                        <div class="font-serif text-xs text-gray-400 tracking-widest" id="photo-counter">1 / 14</div>
+                    </div>
+                </div>
+
+                <!-- Controles de Navegación -->
+                <div class="flex justify-between items-center mt-10 px-4">
+                    <button onclick="prevSlide()"
+                        class="nav-btn p-3 rounded-full text-rose-600 hover:text-rose-800 focus:outline-none"
+                        aria-label="Anterior">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
+                    </button>
+
+                    <button onclick="nextSlide()"
+                        class="nav-btn p-3 rounded-full text-rose-600 hover:text-rose-800 focus:outline-none"
+                        aria-label="Siguiente">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="text-center py-20 fade-in-up delay-500">
+            <p class="font-serif italic text-gray-400 mb-4">Por muchos años más construyendo recuerdos</p>
+            <div class="text-rose-300 text-2xl">∞</div>
+        </footer>
+
+    </main>
+
+    <script>
+        // --- LÓGICA DEL CARRUSEL ---
+        // Lista de imágenes basada en los archivos del usuario
+        const photos = [
+            '1.jpeg', '2.jpeg', '3.jpg', '4.jpg', '5.jpg',
+            '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
+            '11.jpg', '12.jpg', '13.jpg', '14.jpg'
+        ];
+
+        // Frases aleatorias o secuenciales para cada foto (opcional)
+        const captions = [
+            "El comienzo", "Aventuras", "Risas", "Viajes", "Tú y yo",
+            "Momentos únicos", "Inolvidable", "Felicidad", "Juntos", "Magia",
+            "Cómplices", "Amor", "Para siempre", "Te quiero"
+        ];
+
+        let currentIndex = 0;
+        const imgElement = document.getElementById('carousel-img');
+        const counterElement = document.getElementById('photo-counter');
+        const captionElement = document.getElementById('photo-caption');
+        const frameElement = document.getElementById('polaroid-frame');
+
+        // Inicializar primera foto
+        updateCarousel(false);
+
+        function updateCarousel(animate = true) {
+            if (animate) {
+                // Animación de salida
+                frameElement.classList.add('swapping');
+
+                setTimeout(() => {
+                    // Cambiar contenido mientras está invisible
+                    setSrcAndText();
+
+                    // Preparar animación de entrada
+                    frameElement.classList.remove('swapping');
+                    frameElement.classList.add('swapping-in');
+
+                    // Pequeña pausa para que el navegador registre el cambio de clase
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            frameElement.classList.remove('swapping-in');
+                        });
+                    });
+                }, 300); // Esperar a que termine la transición de salida
+            } else {
+                setSrcAndText();
+            }
+        }
+
+        function setSrcAndText() {
+            imgElement.src = photos[currentIndex];
+            counterElement.textContent = `${currentIndex + 1} / ${photos.length}`;
+            captionElement.textContent = captions[currentIndex % captions.length];
+
+            // Rotación aleatoria sutil para dar realismo
+            const randomRotate = (Math.random() * 4 - 2).toFixed(1); // Entre -2 y 2 grados
+            frameElement.style.transform = `rotate(${randomRotate}deg)`;
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % photos.length;
+            updateCarousel(true);
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+            updateCarousel(true);
+        }
+
+        // --- LÓGICA DEL SOBRE (Misma que antes) ---
+        const sealBtn = document.getElementById('seal-btn');
+        const envelopeLayer = document.getElementById('envelope-layer');
+        const mainContent = document.getElementById('main-content');
+
+        let startY = 0;
+        let currentY = 0;
+        let isDragging = false;
+
+        function openEnvelope() {
+            envelopeLayer.style.transform = 'translateY(-100%)';
+            envelopeLayer.style.opacity = '0';
+            mainContent.classList.remove('hidden');
+            setTimeout(() => {
+                envelopeLayer.style.display = 'none';
+                mainContent.style.opacity = '1';
+                document.querySelectorAll('.fade-in-up').forEach((el) => {
+                    el.classList.add('visible');
+                });
+            }, 500);
+        }
+
+        sealBtn.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startY = e.touches[0].clientY;
+            sealBtn.style.transition = 'none';
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            currentY = e.touches[0].clientY;
+            let deltaY = currentY - startY;
+            if (deltaY < 0) {
+                sealBtn.style.transform = `translateY(${deltaY}px)`;
+                let opacity = 1 + (deltaY / 500);
+                if (opacity < 0) opacity = 0;
+                envelopeLayer.style.opacity = opacity;
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            let deltaY = currentY - startY;
+            if (deltaY < -150) {
+                openEnvelope();
+            } else {
+                sealBtn.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                sealBtn.style.transform = 'translateY(0)';
+                envelopeLayer.style.opacity = '1';
+            }
+        });
+
+        sealBtn.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            sealBtn.style.transition = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentY = e.clientY;
+            let deltaY = currentY - startY;
+            if (deltaY < 0) {
+                sealBtn.style.transform = `translateY(${deltaY}px)`;
+                let opacity = 1 + (deltaY / 500);
+                if (opacity < 0) opacity = 0;
+                envelopeLayer.style.opacity = opacity;
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            let deltaY = currentY - startY;
+            if (deltaY < -150) {
+                openEnvelope();
+            } else {
+                sealBtn.style.transition = 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                sealBtn.style.transform = 'translateY(0)';
+                envelopeLayer.style.opacity = '1';
+            }
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in-up').forEach(el => observer.observe(el));
+
+    </script>
+</body>
+
+</html>
